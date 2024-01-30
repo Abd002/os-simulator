@@ -2,17 +2,20 @@ package models;
 
 public class PCB {
 	
-	public enum state{
+	/*
+	private enum state{
 		New,
 		Ready,
 		Waiting,
 		Running,
 		Terminated
 	};
+	*/
+	
 	
 	private int processID;				/* use UniqueIdGenerator to deal with it */
 	
-	state processState;
+	//state processState;
 	
 	int programCounter;
 	
