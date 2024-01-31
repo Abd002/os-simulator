@@ -1,7 +1,5 @@
 package models.process;
 
-import models.UniqueIdGenerator;
-
 public class PCB {
 	
 	private enum state{

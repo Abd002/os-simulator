@@ -1,10 +1,14 @@
-package models;
+package models.process;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class UniqueIdGenerator {
+final public class UniqueIdGenerator {
     private static Set<Integer> usedIds = new HashSet<>();
+    
+    private UniqueIdGenerator() {
+    	
+    }
 
     public static int generateUniqueId() {
 		int newId, lastAssignedId = 0;

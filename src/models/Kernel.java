@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
-import models.process.PCB;
-
 public class Kernel {
 	
 	private Scheduler scheduler;
@@ -16,7 +14,7 @@ public class Kernel {
 	//private Interpreter interpreter; 				/* not exist yet */
 	//private MMU mmu; 								/* not exist yet */
 		
-	public String readFromscreen() {
+	public String readFromScreen() {
 		Scanner scanner = new Scanner(System.in);
 		String userInput = scanner.nextLine();
 		scanner.close();							/* free up system resources */
