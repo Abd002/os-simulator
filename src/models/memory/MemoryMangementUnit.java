@@ -1,4 +1,4 @@
-package Memory;
+package models.memory;
 
 public class MemoryMangementUnit {
     private boolean[] isLocated;

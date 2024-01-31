@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import models.process.PCB;
+
 public class Kernel {
 	
 	private Scheduler scheduler;

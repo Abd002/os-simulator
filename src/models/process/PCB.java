@@ -1,8 +1,9 @@
-package models;
+package models.process;
+
+import models.UniqueIdGenerator;
 
 public class PCB {
 	
-	/*
 	private enum state{
 		New,
 		Ready,
@@ -10,12 +11,10 @@ public class PCB {
 		Running,
 		Terminated
 	};
-	*/
-	
 	
 	private int processID;				/* use UniqueIdGenerator to deal with it */
 	
-	//state processState;
+	state processState;
 	
 	int programCounter;
 	

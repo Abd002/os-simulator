@@ -1,4 +1,4 @@
-package Memory;
+package models.memory;
 public class MemoryWord {
     /* Class Attributes:*/
     private  String data;

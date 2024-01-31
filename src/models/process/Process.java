@@ -1,4 +1,4 @@
-package models;
+package models.process;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -2,6 +2,9 @@ package models;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.io.File;
+
+import models.process.PCB;
 
 public class Scheduler 
 {
@@ -9,6 +12,7 @@ public class Scheduler
 	public int timeSlice;
 	public Queue<PCB> readyQueue;
 	public Queue<PCB> waitingQueue;
+	
 	
 	public Scheduler(int timeSlice)
 	{
@@ -23,11 +27,12 @@ public class Scheduler
 		dispatchProcess(pcb);
 	}
 	
-	
+	/* -> error
 	public Process restoreState(PCB pcb)
 	{
 		return new Process();
 	}
+	*/
 	
 	public void saveState(Process process)
 	{
