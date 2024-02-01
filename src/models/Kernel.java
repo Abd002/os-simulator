@@ -6,13 +6,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+import models.process.*;
+import models.process.Process;
+import models.memory.*;
+
 public class Kernel {
 	
 	private Scheduler scheduler;
 	//private Mutex mutex; 							/* not exist yet */
 	//private Memory memory; 						/* not exist yet */
 	//private Interpreter interpreter; 				/* not exist yet */
-	//private MMU mmu; 								/* not exist yet */
+	private MemoryManagementUnit mmu;
 		
 	public String readFromScreen() {
 		Scanner scanner = new Scanner(System.in);
@@ -71,8 +75,33 @@ public class Kernel {
 		return ;
 	}
 	
-	
-	
-	
+	public Process restoreState(PCB pcb) {
+		/*
+		 * if (pcb.isLoaded == false)
+		 * {
+		 * 		return mmu.swapFromDisk(pcb);
+		 * }
+		 * 
+		 * ArrayList<String> instructions = new ArrayList<String>();
+		 * Map<string, Variable> variables = new HashMap<>();
+		 * 
+		 * for (int i = 0; i < pcb.memoryBoundaries.length; i++)
+		 * {
+		 * 		MemoryWord word = readFromMemory(pcb.memoryBoundaries[i]);
+		 * 		if (word.isInstruction)
+		 * 		{
+		 * 			instructions.add(word.getData())
+		 * 		}
+		 * 		if (word.isVariable)
+		 * 		{
+		 * 			variables.put(word.getVariableName, new Variable(word.getVariableName, word.getData, pcb.memoryBoundaries[i]);
+		 * 		}
+		 * }
+		 * 
+		 * return new Process(pcb, instructions.ToArray(), variables);
+		 */
+		
+		return new Process();
+	}
 	
 }

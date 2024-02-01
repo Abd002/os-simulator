@@ -2,8 +2,10 @@ package controllers;
 
 import models.Kernel;
 
-public class Driver {
-
+public final class Driver {
+	
+	private static int clock = 0;
+	
 	public static void main(String[] args) {
 		
 		Kernel kernel=new Kernel();
@@ -14,5 +16,16 @@ public class Driver {
 		Kernel.writeToDisk("k",ok);
     
     }
+	
+	public static void tick() {
+		clock++;
+	}
+	
+	public static int getClock() {
+		return clock;
+	}
+	
+	private Driver() {}
+
 	
 }
