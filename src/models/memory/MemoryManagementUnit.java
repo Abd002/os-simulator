@@ -50,7 +50,10 @@ public final class MemoryManagementUnit {
     }
 
     public void swapToDisk(Process process){
-        File file = new File("");
+
+    }
+    public void swapFromDisk(PCB pcb){
+
     }
 
 }
