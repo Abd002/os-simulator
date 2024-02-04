@@ -1,10 +1,29 @@
 package models.memory;
-public class MemoryWord {
+public final class MemoryWord {
     /* Class Attributes:*/
     private  String data;
     private String variableName;
     private boolean isInstruction;
     private boolean isVariable;
+
+    //constructor
+    public void MemoryWord(){
+        data = "";
+        variableName = "";
+        isInstruction = false;
+        isVariable = false;
+    }
+    public void MemoryWord(String instruction){
+        this.data = instruction;
+        this.variableName = "";
+        setInstruction(true);
+    }
+
+    public void MemoryWord(String data,String variableName){
+        this.data = data;
+        this.variableName = variableName;
+        setVariable(true);
+    }
 
     /* Getters*/
     public String getData(){
@@ -29,13 +48,21 @@ public class MemoryWord {
     public void setVariableName(String  variableName){
         this.variableName = variableName;
     }
-public void setInstruction(boolean isInstruction){
+    public void setInstruction(boolean isInstruction){
         this.isInstruction = isInstruction;
-}
+        isVariable = !isInstruction;
+    }
 
-public void setVariable(boolean isVariable){
+    public void setVariable(boolean isVariable){
         this.isVariable = isVariable;
-}
+        isInstruction = !isVariable;
+    }
 
+    public void setWord(MemoryWord word){
+        this.data = word.data;
+        this.variableName = word.variableName;
+        this.isVariable = word.isVariable;
+        this.isInstruction = word.isInstruction;
+    }
 
 }

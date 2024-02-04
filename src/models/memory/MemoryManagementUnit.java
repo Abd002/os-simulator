@@ -1,30 +1,56 @@
 package models.memory;
+import models.Kernel;
+import models.process.Process;
+import models.process.PCB;
+import java.util.Arrays;
+import java.io.File;
 
-public class MemoryManagementUnit {
-    private boolean[] isLocated;
-    private final Memory memory;
+public final class MemoryManagementUnit {
+    private final Kernel kernel;
+    private boolean[] isAlLocated;
+    private int[] processIDs;
 
-    public MemoryMangementUnit (Memory memory){
-        this.memory = memory;
-        this.isLocated = new boolean[memory.getMaxNumberOfWords()] ;
+    public  MemoryManagementUnit (Kernel kernel){
+        this.kernel = kernel;
+        int size = this.kernel.memory.maxNumberOfWords;
+        isAlLocated = new boolean[size];
+        processIDs = new int[size];
+        for(int i = 0;i < size;i++){
+            isAlLocated[i] = false;
+            processIDs[i] = -1;
+        }
+
     }
 
-    public int[] allocateMemory(int size){
+    public int[] allocateMemory(int size,int pid){
         int[] result = new int[size];
         int index = 0;
-        for(int i = 0;i < isLocated.length;i++){
-            if(!isLocated[i]){
+        for(int i = 0;i < isAlLocated.length;i++){
+            if(!isAlLocated[i]){
                 result[index++] = i;
-                isLocated[i] = true;
+                isAlLocated[i] = true;
+                processIDs[i] = pid;
+            }
+            if(size <= index){
+                break;
             }
         }
+        if(size > index){
+            Arrays.fill(result, -1);
+        }
         return result;
+
     }
 
-    public void deAllocateMemory(int [] locations){
-        for(int i = 0;i < locations.length;i++){
-            isLocated[locations[i]] = false;
+    public void deAllocateMemory(int [] addresses){
+        for (int address : addresses) {
+            isAlLocated[address] = false;
+            processIDs[address] = -1;
         }
+    }
+
+    public void swapToDisk(Process process){
+        File file = new File("");
     }
 
 }

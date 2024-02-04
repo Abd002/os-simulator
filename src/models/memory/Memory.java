@@ -1,18 +1,26 @@
 package models.memory;
+import models.Kernel;
 
-public class Memory {
+public final class Memory {
     private final int maxNumberOfWords;
-    private final MemoryWord[] memory;
-    public Memory(int maxNumberOfWords){
+    private final Kernel kernel;
+    private  MemoryWord[] memory;
+    public Memory(Kernel kernel,int maxNumberOfWords){
         this.maxNumberOfWords = maxNumberOfWords;
         this.memory = new MemoryWord[maxNumberOfWords];
+        this.kernel = kernel;
     }
 
     public int getMaxNumberOfWords() {
         return maxNumberOfWords;
     }
 
-   public MemoryWord getMemmory(int address){
-       return memory[address];
-   }
+    public MemoryWord getMemmoryWord(int address){
+        return memory[address];
+    }
+
+    public void setMemoryWord(int address,MemoryWord word){
+        this.memory[address] = word;
+    }
+
 }
