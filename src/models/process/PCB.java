@@ -2,7 +2,7 @@ package models.process;
 
 public class PCB {
 	
-	private enum state{
+	private enum ProcessState{
 		New,
 		Ready,
 		Waiting,
@@ -12,7 +12,7 @@ public class PCB {
 	
 	private int processID;				/* use UniqueIdGenerator to deal with it */
 	
-	state processState;
+	ProcessState processState;
 	
 	int programCounter;
 	
@@ -32,5 +32,32 @@ public class PCB {
 
     public void deleteProcess() {
         UniqueIdGenerator.releaseId(this.processID);
+    }
+    
+    public ProcessState getState() {
+    	return processState;
+    }
+    
+    public void setState(ProcessState processState) {
+    	this.processState=processState;
+    }
+    
+    public int getPC() {
+    	return programCounter;
+    }
+   
+    public void incrementPC() {
+    	programCounter++;
+    }
+    
+    
+    //TODO
+    public int[] getMemoryTable() {
+    	return getMemoryTable();
+    }
+    
+    //TODO
+    public void setMemTable() {
+    	
     }
 }

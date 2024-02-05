@@ -12,11 +12,60 @@ import models.memory.*;
 
 public class Kernel {
 	
-	private Scheduler scheduler;
-	//private Mutex mutex; 							/* not exist yet */
-	//private Memory memory; 						/* not exist yet */
-	//private Interpreter interpreter; 				/* not exist yet */
-	private MemoryManagementUnit mmu;
+	private int clock;
+	public final int MAX_CLOCK;
+	public Scheduler scheduler;
+	public MemoryManagementUnit mmu;
+	
+	//public Mutex mutex; 							/* not exist yet */
+	//public Memory memory; 						/* not exist yet */
+	//public Interpreter interpreter; 				/* not exist yet */
+	//public final SystemCalls systemCalls;			/* not exist yet */
+	//public final Scheduler scheduler 				/* not exist yet */
+	
+	//TODO ->>>>>
+	public Kernel(int maxClock) {
+		clock=0;
+		MAX_CLOCK=maxClock;
+	}
+	
+	public void incrementClock() {
+		return ;
+	}
+	
+	public int getClock() {
+		return getClock();
+	}
+	
+	public void printMessage(String msg) {
+		
+	}
+	public void run() {
+		
+	}
+	
+	/* TODO waiting interpreter(parse(Ins&variables)) and MMU(allocateMemory) and schedulerAdmitProcess */
+	public void createProcess(String programName) {
+		
+		String program =readFromDisk(programName);
+		
+		
+		return ;
+	}
+	
+	public void saveProcessState(Process process) {
+		
+	}
+	
+	public Process restoreProcessState(PCB pcb) {
+		return restoreProcessState(pcb);
+	}
+
+
+	
+
+	
+	// <<<<<<<<-
 		
 	public String readFromScreen() {
 		Scanner scanner = new Scanner(System.in);
@@ -66,14 +115,7 @@ public class Kernel {
 	}
 	
 	
-	/* TODO waiting interpreter(parse(Ins&variables)) and MMU(allocateMemory) and schedulerAdmitProcess */
-	public void createProcess(String programName) {
-		
-		String program =readFromDisk(programName);
-		
-		
-		return ;
-	}
+	
 	
 	public Process restoreState(PCB pcb) {
 		/*
