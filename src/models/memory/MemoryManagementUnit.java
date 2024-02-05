@@ -42,7 +42,7 @@ public final class MemoryManagementUnit {
 
     }
 
-    public void deAllocateMemory(int [] addresses){
+    public void deallocateMemory(int [] addresses){
         for (int address : addresses) {
             isAlLocated[address] = false;
             processIDs[address] = -1;
