@@ -2,6 +2,9 @@ package models.memory;
 import models.Kernel;
 import models.process.Process;
 import models.process.PCB;
+
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.io.File;
 
@@ -50,7 +53,32 @@ public final class MemoryManagementUnit {
     }
 
     public void swapToDisk(Process process){
+        String title = String.valueOf(process.pcb.getId());
 
+        try{
+            File file = new File("models/files/"+title+".txt");
+            if (file.createNewFile()) {
+                //file Created
+            } else {
+                //file already exist
+            }
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        int size = process.getInstructions().length;
+        String[] instructionArray = process.getInstructions();
+        String content = "";
+        for(int i = 0;i < size;i++){
+            content += instructionArray[i] + "\n";
+        }
+        try{
+            FileWriter writer = new FileWriter("models/files/"+title+".txt");
+            writer.write(content);
+            writer.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
     public void swapFromDisk(PCB pcb){
 
