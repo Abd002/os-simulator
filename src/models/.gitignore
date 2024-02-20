@@ -1,2 +1,4 @@
 /Kernel.class
 /Scheduler.class
+/Mutex.class
+/SystemCalls.class

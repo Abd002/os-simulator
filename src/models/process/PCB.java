@@ -1,63 +1,57 @@
 package models.process;
 
-public class PCB {
-	
-	private enum ProcessState{
-		New,
-		Ready,
-		Waiting,
-		Running,
-		Terminated
+import java.util.Arrays;
+
+public final class PCB {
+
+	private enum ProcessState {
+		NEW, READY, WAITING, RUNNING, TERMINATED
 	};
-	
-	private int processID;				/* use UniqueIdGenerator to deal with it */
-	
-	ProcessState processState;
-	
-	int programCounter;
-	
-	boolean isLoaded;
-	
-	int[] memoryBoundaries = new int[2];
-	
-	
-	
-    public PCB() {
-        this.processID = UniqueIdGenerator.generateUniqueId();
-    }
 
-    public int getId() {
-        return processID;
-    }
+	public final int pid;
+	private ProcessState state;
+	private int programCounter;
+	private final int[] memoryTable;
 
-    public void deleteProcess() {
-        UniqueIdGenerator.releaseId(this.processID);
-    }
-    
-    public ProcessState getState() {
-    	return processState;
-    }
-    
-    public void setState(ProcessState processState) {
-    	this.processState=processState;
-    }
-    
-    public int getPC() {
-    	return programCounter;
-    }
-   
-    public void incrementPC() {
-    	programCounter++;
-    }
-    
-    
-    //TODO
-    public int[] getMemoryTable() {
-    	return getMemoryTable();
-    }
-    
-    //TODO
-    public void setMemTable() {
-    	
-    }
+	public PCB(int[] addresses) {
+		this.pid = UniqueIdGenerator.generateUniqueId();
+		this.state = ProcessState.NEW;
+		this.programCounter = 0;
+		this.memoryTable = addresses;
+	}
+
+	public ProcessState getState() {
+		return state;
+	}
+
+	public void setState(ProcessState state) {
+		this.state = state;
+	}
+
+	public int getPC() {
+		return programCounter;
+	}
+
+	public void incrementPC() {
+		programCounter++;
+		return;
+	}
+
+	public int[] getMemoryTable() {
+		return Arrays.copyOf(memoryTable, memoryTable.length);
+	}
+
+	public void setMemTable(int[] memTable) {
+		for (int i = 0; i < memTable.length; i++) {
+			this.memoryTable[i] = memTable[i];
+		}
+	}
+	
+	public void deleteProcess() {
+		UniqueIdGenerator.releaseId(pid);
+		return ;
+	}
+	
+	
+	
 }

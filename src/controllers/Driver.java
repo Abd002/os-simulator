@@ -15,7 +15,7 @@ public final class Driver {
 	public static void main(String[] args) {
 		kernel = new Kernel(1000);
 		processes = new HashMap<>();
-		
+				
 		/* TODO: Read program names and times from args*/
 		processes.put(0, new ArrayList<String>());
 		processes.get(0).add("program1");

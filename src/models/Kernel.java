@@ -1,149 +1,64 @@
 package models;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
-
-import models.process.*;
-import models.process.Process;
+import controllers.Driver;
 import models.memory.*;
+import models.process.PCB;
+import models.process.Process;
 
 public class Kernel {
-	
+
 	private int clock;
 	public final int MAX_CLOCK;
-	public Scheduler scheduler;
-	public MemoryManagementUnit mmu;
-	
-	//public Mutex mutex; 							/* not exist yet */
-	//public Memory memory; 						/* not exist yet */
-	//public Interpreter interpreter; 				/* not exist yet */
-	//public final SystemCalls systemCalls;			/* not exist yet */
-	//public final Scheduler scheduler 				/* not exist yet */
-	
-	//TODO ->>>>>
+	public final SystemCalls systemCalls;
+	public final Scheduler scheduler;
+	public final Mutex mutex;
+	public final Memory memory;
+	// public final Interpreter interpreter; /* not exist yet */
+	public final MemoryManagementUnit mmu;
+
 	public Kernel(int maxClock) {
-		clock=0;
-		MAX_CLOCK=maxClock;
+		clock = 0;
+		MAX_CLOCK = maxClock;
+
+		this.scheduler = new Scheduler(this, 2);
+		this.systemCalls = new SystemCalls();
+		this.mutex = new Mutex(this);
+		this.memory = new Memory(this, 8);
+		this.mmu = new MemoryManagementUnit(this);
 	}
-	
+
 	public void incrementClock() {
-		return ;
+		clock++;
+		Driver.checkProcessArrival(clock);
+		return;
 	}
-	
+
 	public int getClock() {
-		return getClock();
+		return clock;
 	}
-	
+
 	public void printMessage(String msg) {
-		
+		System.out.println(msg);
+		return;
 	}
+
 	public void run() {
-		
+		scheduler.schedule();
+		System.out.println("END OFSIMULATION");
+		return;
 	}
-	
-	/* TODO waiting interpreter(parse(Ins&variables)) and MMU(allocateMemory) and schedulerAdmitProcess */
+
 	public void createProcess(String programName) {
-		
-		String program =readFromDisk(programName);
-		
-		
-		return ;
+
 	}
-	
+
 	public void saveProcessState(Process process) {
-		
 	}
 	
 	public Process restoreProcessState(PCB pcb) {
-		return restoreProcessState(pcb);
+		
+		return null;
 	}
 
 
-	
-
-	
-	// <<<<<<<<-
-		
-	public String readFromScreen() {
-		Scanner scanner = new Scanner(System.in);
-		String userInput = scanner.nextLine();
-		scanner.close();							/* free up system resources */
-		return userInput;
-	}
-	
-	public void writeToScreen(String content) {
-		System.out.println(content);
-		return ;
-	}
-	
-	public String readFromDisk(String fileName) {	/* just the name without .txt */
-		String content="";
-		
-		String filePath ="resources/files/"+fileName; 
-		
-		File file =new File(filePath);
-		try {										/* handle if file doesn't exist */
-		
-			Scanner scanner = new Scanner(file);
-			
-			while(scanner.hasNextLine()) {			/* reading process and separate strings by \n */
-				String line = scanner.nextLine();
-				content = content+"\n"+line;
-			}
-			
-			scanner.close();						/* free up system resources */
-		}catch (FileNotFoundException e){
-			System.out.println("File not found");
-		}
-
-		return content;
-	}
-	
-	public static void writeToDisk(String fileName, String content) {
-		String filePath ="resources/files/"+fileName; 
-		try {
-			FileWriter writer = new FileWriter(filePath);
-			writer.write(content);
-			writer.close();
-		}catch (IOException e) {
-            e.printStackTrace();
-        }
-		return ;
-	}
-	
-	
-	
-	
-	public Process restoreState(PCB pcb) {
-		/*
-		 * if (pcb.isLoaded == false)
-		 * {
-		 * 		return mmu.swapFromDisk(pcb);
-		 * }
-		 * 
-		 * ArrayList<String> instructions = new ArrayList<String>();
-		 * Map<string, Variable> variables = new HashMap<>();
-		 * 
-		 * for (int i = 0; i < pcb.memoryBoundaries.length; i++)
-		 * {
-		 * 		MemoryWord word = readFromMemory(pcb.memoryBoundaries[i]);
-		 * 		if (word.isInstruction)
-		 * 		{
-		 * 			instructions.add(word.getData())
-		 * 		}
-		 * 		if (word.isVariable)
-		 * 		{
-		 * 			variables.put(word.getVariableName, new Variable(word.getVariableName, word.getData, pcb.memoryBoundaries[i]);
-		 * 		}
-		 * }
-		 * 
-		 * return new Process(pcb, instructions.ToArray(), variables);
-		 */
-		
-		return new Process();
-	}
-	
 }
