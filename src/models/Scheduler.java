@@ -10,7 +10,7 @@ import models.process.Process;
 public final class Scheduler {
 	
 	private final Kernel kernel;
-	private final int TIME_SLICE;
+	public final int TIME_SLICE;
 	private final Queue<PCB> readyQueue;
 	private final Queue<PCB> inputWaitingQueue;
 	private final Queue<PCB> outputWaitingQueue;
@@ -93,6 +93,22 @@ public final class Scheduler {
 		// TODO: pcb.setState(ProcessState.TERMINATED);
 		kernel.mmu.deallocateMemory(pcb.getMemoryTable());
 		pcb.deleteProcess();
+	}
+	
+	public Queue<PCB> getReadyQueue() {
+		return new LinkedList<>(readyQueue);
+	}
+	
+	public Queue<PCB> getInputWaitingQueue () {
+		return new LinkedList<>(inputWaitingQueue);
+	}
+	
+	public Queue<PCB> getOutputWaitingQueue() {
+		return new LinkedList<>(outputWaitingQueue);		
+	}
+	
+	public HashMap<String, Queue<PCB>> getFileWaitingQueue() {
+		return new HashMap<String, Queue<PCB>>(fileWaitingQueue);
 	}
 
 }

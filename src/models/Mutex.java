@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public final class Mutex {
@@ -54,6 +55,22 @@ public final class Mutex {
 		}
 		
 		kernel.scheduler.unblockProcess(resource);
+	}
+	
+	public boolean isInputMutexFree() {
+		return inputSem == 1;
+	}
+	
+	public boolean inOutputMutexFree() {
+		return outputSem == 1;
+	}
+	
+	public String[] getMutexLockedFiles() {
+		ArrayList<String> files = new ArrayList<>();
+		fileSem.forEach((k, v) -> {
+			if (v == 0) files.add(k);
+		});
+		return files.toArray(new String[0]);
 	}
 	
 }
