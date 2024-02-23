@@ -7,19 +7,19 @@ public final class MemoryWord {
     private boolean isVariable;
 
     //constructor
-    public void MemoryWord(){
+    public MemoryWord(){
         data = "";
         variableName = "";
         isInstruction = false;
         isVariable = false;
     }
-    public void MemoryWord(String instruction){
+    public MemoryWord(String instruction){
         this.data = instruction;
         this.variableName = "";
         setInstruction(true);
     }
 
-    public void MemoryWord(String data,String variableName){
+    public MemoryWord(String data,String variableName){
         this.data = data;
         this.variableName = variableName;
         setVariable(true);
@@ -29,6 +29,7 @@ public final class MemoryWord {
     public String getData(){
         return  data;
     }
+
     public String getVariableName(){
         return variableName;
     }

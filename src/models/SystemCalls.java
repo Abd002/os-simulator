@@ -29,7 +29,7 @@ public final class SystemCalls {
 		return;
 	}
 
-	public ArrayList<String> readFromDisk(String fileName) { /* just the name without .txt */
+	public static ArrayList<String> readFromDisk(String fileName) { /* just the name without .txt */
 		ArrayList<String> stringList = new ArrayList<>();
 		String filePath = "resources/files/" + fileName;
 
@@ -64,7 +64,7 @@ public final class SystemCalls {
 	}
 
 	public MemoryWord readFromMemory(int address) {
-		return kernel.memory.getMemmoryWord(address);
+		return kernel.memory.getMemoryWord(address);
 	}
 
 	public void writeToMemory(int address, MemoryWord word) {

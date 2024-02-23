@@ -31,4 +31,8 @@ public final class Process {
 		variables.put(name, temp);
 		return;
 	}
+
+	public Map<String, Variable> getVariables() {
+		return variables;
+	}
 }
