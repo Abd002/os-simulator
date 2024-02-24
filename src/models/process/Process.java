@@ -1,5 +1,6 @@
 package models.process;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,7 +33,14 @@ public final class Process {
 		return;
 	}
 
-	public Map<String, Variable> getVariables() {
-		return variables;
+	public Variable[] getAllVariables() {
+		ArrayList<Variable> variableList = new ArrayList<>();
+		for (String key : variables.keySet()) {
+			variableList.add(variables.get(key));
+		}
+		Variable[] variableArray = new Variable[variableList.size()];
+		variableArray = variableList.toArray(variableArray);
+		return variableArray;
+
 	}
 }

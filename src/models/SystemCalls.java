@@ -29,7 +29,7 @@ public final class SystemCalls {
 		return;
 	}
 
-	public static ArrayList<String> readFromDisk(String fileName) { /* just the name without .txt */
+	public String[] readFromDisk(String fileName) { /* just the name without .txt */
 		ArrayList<String> stringList = new ArrayList<>();
 		String filePath = "resources/files/" + fileName;
 
@@ -47,11 +47,14 @@ public final class SystemCalls {
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found");
 		}
+		
+		 String[] stringArray = new String[stringList.size()];
+		 stringArray = stringList.toArray(stringArray);
 
-		return stringList;
+		return stringArray;
 	}
 
-	public static void writeToDisk(String fileName, String content) {
+	public void writeToDisk(String fileName, String content) {
 		String filePath = "resources/files/" + fileName;
 		try {
 			FileWriter writer = new FileWriter(filePath);

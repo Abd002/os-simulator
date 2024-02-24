@@ -4,9 +4,6 @@ import java.util.Arrays;
 
 public final class PCB {
 
-	private enum ProcessState {
-		NEW, READY, WAITING, RUNNING, TERMINATED
-	};
 
 	public final int pid;
 	private ProcessState state;
