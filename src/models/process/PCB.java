@@ -8,13 +8,12 @@ public final class PCB {
 	public final int pid;
 	private ProcessState state;
 	private int programCounter;
-	private final int[] memoryTable;
+	private int[] memoryTable;
 
-	public PCB(int[] addresses) {
+	public PCB() {
 		this.pid = UniqueIdGenerator.generateUniqueId();
 		this.state = ProcessState.NEW;
 		this.programCounter = 0;
-		this.memoryTable = addresses;
 	}
 
 	public ProcessState getState() {
@@ -47,6 +46,10 @@ public final class PCB {
 	public void deleteProcess() {
 		UniqueIdGenerator.releaseId(pid);
 		return ;
+	}
+	
+	public void initializeMemTable(int[] table) {
+		memoryTable=Arrays.copyOf(table, table.length);
 	}
 	
 	
