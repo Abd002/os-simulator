@@ -36,20 +36,35 @@ public final class Scheduler {
 	}
 	
 	public void admitProcess(PCB pcb) {
-		// TODO: pcb.setState(ProcessState.READY);
+		pcb.setState(ProcessState.READY);
 		readyQueue.add(pcb);
 	}
 	
 	private void dispatchProcess(PCB pcb) {
-		// TODO: pcb.setState(ProcessState.RUNNING);
-		int timeElapsed = 0;
+		kernel.printMessage("SCHEDULER :: Process #" + pcb.pid + " started EXECUTION at CLOCK CYCLE " + kernel.getClock());		
+
+		int timeElapsed = 0;	
 		Process process = kernel.restoreProcessState(pcb);
+		pcb.setState(ProcessState.RUNNING);
 		
-		// TODO: Implement the rest of the method
+		while (timeElapsed != TIME_SLICE) {
+			boolean executionSucceeded = kernel.interpreter.executeInstruction(process);
+			kernel.incrementClock();
+			timeElapsed++;
+			
+			if (!executionSucceeded)
+				break; // Interpreter should have blocked the process according to the resource
+		}
+		
+		if (process.pcb.getPC() == process.getInstructions().length)
+			terminateProcess(pcb);
+		else
+			interruptProcess(process);
+		
 	}
 	
 	public void blockProcess(Process process, String resource) {
-		// TODO: process.pcb.setState(ProcessState.WAITING);
+		process.pcb.setState(ProcessState.WAITING);
 		kernel.saveProcessState(process);
 		
 		switch(resource) {
@@ -77,20 +92,24 @@ public final class Scheduler {
 				admitProcess(outputWaitingQueue.remove());
 			break;
 		default:
-			if (!fileWaitingQueue.containsKey(resource))
-				return; // TODO: Throw an error
+			if (!fileWaitingQueue.containsKey(resource)) {
+				kernel.printMessage("SCHEDULER :: ERROR :: INVALID RESOURCE NAME, MUST BE INPUT OR OUTPUT OR A NAME OF AN EXISTING FILE");
+				return;
+			}
 			if (!fileWaitingQueue.get(resource).isEmpty())
 				admitProcess(fileWaitingQueue.get(resource).remove());
 		}
 	}
 	
 	private void interruptProcess(Process process) {
+		kernel.printMessage("SCHEDULER :: Process #" + process.pcb.pid + " was INTERRUPTED at CLOCK CYCLE " + kernel.getClock());		
 		kernel.saveProcessState(process);
 		admitProcess(process.pcb);
 	}
 	
 	private void terminateProcess(PCB pcb) {
-		// TODO: pcb.setState(ProcessState.TERMINATED);
+		kernel.printMessage("SCHEDULER :: Process #" + pcb.pid + "was TERMINATED at CLOCK CYCLE " + kernel.getClock());		
+		pcb.setState(ProcessState.TERMINATED);
 		kernel.mmu.deallocateMemory(pcb.getMemoryTable());
 		pcb.deleteProcess();
 	}

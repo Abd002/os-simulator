@@ -49,8 +49,10 @@ public final class Mutex {
 			outputSem++;
 			break;
 		default:
-			if (!fileSem.containsKey(resource))
-				return; // TODO: Throw an error
+			if (!fileSem.containsKey(resource)) {
+				kernel.printMessage("MUTEX :: ERROR :: INVALID RESOURCE NAME, MUST BE INPUT, OUTPUT OR A NAME OF AN EXISTING FILE");
+				return;
+			}
 			fileSem.put(resource, fileSem.get(resource) + 1);
 		}
 		
