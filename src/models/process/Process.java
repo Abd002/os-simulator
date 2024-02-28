@@ -14,6 +14,14 @@ public final class Process {
 		this.pcb = pcb;
 		this.instructions = instructions;
 		for (int i = 0; i < varNames.length; i++) {
+			variables.put(varNames[i], new Variable(varNames[i], varValues[i], instructions.length + i));
+		}
+	}
+
+	public Process(PCB pcb, String[] instructions, String[] varNames) {
+		this.pcb = pcb;
+		this.instructions = instructions;
+		for (int i = 0; i < varNames.length; i++) {
 			variables.put(varNames[i], new Variable("", "", instructions.length + i));
 		}
 	}

@@ -4,16 +4,16 @@ import java.util.Arrays;
 
 public final class PCB {
 
-
 	public final int pid;
 	private ProcessState state;
 	private int programCounter;
 	private int[] memoryTable;
 
-	public PCB() {
+	public PCB(int processSize) {
 		this.pid = UniqueIdGenerator.generateUniqueId();
 		this.state = ProcessState.NEW;
 		this.programCounter = 0;
+		this.memoryTable = new int[processSize];
 	}
 
 	public ProcessState getState() {
@@ -37,21 +37,13 @@ public final class PCB {
 		return Arrays.copyOf(memoryTable, memoryTable.length);
 	}
 
-	public void setMemTable(int[] memTable) {
-		for (int i = 0; i < memTable.length; i++) {
-			this.memoryTable[i] = memTable[i];
-		}
+	public void setMemoryTable(int[] table) {
+		memoryTable = Arrays.copyOf(table, table.length);
 	}
-	
+
 	public void deleteProcess() {
 		UniqueIdGenerator.releaseId(pid);
-		return ;
+		return;
 	}
-	
-	public void initializeMemTable(int[] table) {
-		memoryTable=Arrays.copyOf(table, table.length);
-	}
-	
-	
-	
+
 }

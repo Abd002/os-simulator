@@ -13,20 +13,8 @@ public final class SystemCalls {
 
 	private final Kernel kernel;
 
-	public SystemCalls() {
-		this.kernel = new Kernel(10);
-	}
-
-	public String readFromScreen() {
-		Scanner scanner = new Scanner(System.in);
-		String userInput = scanner.nextLine();
-		scanner.close(); /* free up system resources */
-		return userInput;
-	}
-
-	public void writeToScreen(String content) {
-		System.out.println(content);
-		return;
+	public SystemCalls(Kernel kernel) {
+		this.kernel = kernel;
 	}
 
 	public String[] readFromDisk(String fileName) { /* just the name without .txt */
@@ -47,22 +35,37 @@ public final class SystemCalls {
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found");
 		}
-		
-		 String[] stringArray = new String[stringList.size()];
-		 stringArray = stringList.toArray(stringArray);
+
+		String[] stringArray = new String[stringList.size()];
+		stringArray = stringList.toArray(stringArray);
 
 		return stringArray;
 	}
 
-	public void writeToDisk(String fileName, String content) {
+	public void writeToDisk(String fileName, String lines[]) {
 		String filePath = "resources/files/" + fileName;
 		try {
 			FileWriter writer = new FileWriter(filePath);
-			writer.write(content);
+			for (int i = 0; i < lines.length; i++) {
+				writer.write(lines[i]);
+			}
+
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return;
+	}
+
+	public String readFromScreen() {
+		Scanner scanner = new Scanner(System.in);
+		String userInput = scanner.nextLine();
+		scanner.close(); /* free up system resources */
+		return userInput;
+	}
+
+	public void writeToScreen(String content) {
+		System.out.println(content);
 		return;
 	}
 
