@@ -59,12 +59,12 @@ public final class MemoryManagementUnit {
      */
     public void swapToDisk(Process process){
         String[] instructions  = process.getInstructions();
-        Map<String, Variable> variables = process.getVariables();
+        Variable[] variables = process.getAllVariables();
         ArrayList<String> namesOfVariables = new ArrayList<>();
         ArrayList<String> valuesOfVariables = new ArrayList<>();
-        for(String name: variables.keySet()){
-            namesOfVariables.add(name);
-            valuesOfVariables.add(process.getVariable(name).getValue());
+        for(Variable var: variables){
+            namesOfVariables.add(var.name);
+            valuesOfVariables.add(var.getValue());
         }
         String[] varNames = new String[namesOfVariables.size()];
         varNames = namesOfVariables.toArray(varNames);
@@ -156,24 +156,24 @@ public final class MemoryManagementUnit {
                 }
             }
             //free this processes.
+            Map<Integer,ArrayList<Integer>> processLocations = new HashMap<Integer,ArrayList<Integer>>();
             if(counter >= sizeNeeded){
                 for(int i = 0;i < freeProcesses.size();i++){
                     int size = sortedMap.get(freeProcesses.get(i)); //number of used location in memory.
-                    int[] locations = new int[size];
-                    int index = 0;
+                    ArrayList<Integer> locations = new ArrayList<>();
                     //get locations of process of (PID).
                     for(int j = 0;j < processIDs.length;j++){
                         if(processIDs[j] == freeProcesses.get(i)){
-                            locations[index] = j;
-                            if(locations.length == size){
+                            locations.add(j);
+                            if(locations.size() == size){
                                 break;
                             }
                         }
+                        //save the locations of process with pid.
+                        processLocations.put(freeProcesses.get(i),locations);
                     }
                     //swap this process to disk and deallocate from memory.
-                    PCB tempPCB = new PCB(locations);
-                    Process tempProcess = createProcess(tempPCB);
-                    swapToDisk(tempProcess);
+                   swapProcess(freeProcesses.get(i),locations);
                 }
             }
             //after free some processes, we become ready to swap this pcb from disk
@@ -217,13 +217,22 @@ public final class MemoryManagementUnit {
         }
     }
 
-    private Process createProcess(PCB pcb){
-        int[] addresses = pcb.getMemoryTable();
+    /**
+     * this method to swap proccess from memory to disk using ID and locations only.
+     * @param pid ID of process.
+     * @param locations locations of memory words.
+     */
+    private void swapProcess(int pid,ArrayList<Integer> locations){
+        String name = String.valueOf(pid);
+        Integer [] locationsArray = new Integer[locations.size()];
+        locationsArray = locations.toArray(locationsArray);
+        //save the instructions and the variables with their values.
         ArrayList<String> data = new ArrayList<>();
         ArrayList<String> varName = new ArrayList<>();
         ArrayList<String> instruction = new ArrayList<>();
-        for(int i = 0;i < addresses.length;i++){
-            MemoryWord memoryWord = kernel.memory.getMemoryWord(addresses[i]);
+
+        for(int i = 0;i < locations.size();i++){
+            MemoryWord memoryWord = kernel.memory.getMemoryWord(locationsArray[i]);
             if(memoryWord.isVariable()){
                 String tempVarName = memoryWord.getVariableName();
                 String tempVarData = memoryWord.getData();
@@ -234,16 +243,27 @@ public final class MemoryManagementUnit {
                 instruction.add(tempInstruction);
             }
         }
-        String[] instructions = new String[instruction.size()];
-        String[] varValues = new String[data.size()];
-        String[] varNames = new String[varName.size()];
-        instructions = instruction.toArray(instructions);
-        varValues = data.toArray(varValues);
-        varNames = varName.toArray(varNames);
-        Process tempProcess = new Process(pcb,instructions,varNames,varValues);
-        return  tempProcess;
-    }
+        //save in files.
+        String[] lines = new String[instruction.size() + data.size() + varName.size() + 3];
+        int index = 0;
+        lines[index++] = "Instructions";
+        for(String line : instruction){
+            lines[index++] = line;
+        }
+        //save all variable's name.
+        lines[index++] = "Variables";
+        for(String line : varName){
+            lines[index++] = line;
+        }
+        //save all variable's values.
+        lines[index++] = "Values";
+        for(String line : data){
+            lines[index++] = line;
+        }
 
+        //Write to file
+        kernel.systemCalls.writeToDisk(name,lines);
+    }
     public int[] getProcessIDs()
     {
         return this.processIDs.clone();
