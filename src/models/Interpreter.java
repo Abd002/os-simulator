@@ -2,11 +2,8 @@ package models;
 
 import models.Kernel;
 import models.process.Process;
-import models.process.Variable;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Scanner;
 
 public final class Interpreter {
     private final Kernel kernel;
@@ -67,7 +64,7 @@ public final class Interpreter {
      *
      * • writeFile: to write data to a file.
      *
-     * readFile: to read data from a file.
+     * •w readFile: to read data from a file.
      *
      * • printFromTo: to print all numbers between 2 numbers.
      *
@@ -78,16 +75,98 @@ public final class Interpreter {
      * @return
      */
 
-    public boolean executeInstruction(Process process){
+    public boolean executeInstruction(Process process) {
         boolean done = false;
         String[] instructions = process.getInstructions();
-        Variable[] variables = process.getAllVariables();
-        for(int i = 0;i < instructions.length;i++){
-            String[] words = instructions[i].split(" ");
-        }
-
-        //TODO
-        return false;
+        String instruction = instructions[process.pcb.getPC()];
+        String[] words = instruction.split(" ");
+        String resourceName = "";
+            for (int i = 0; i < words.length; i++) {
+                String word = words[i];
+                switch (word) {
+                    case "print":
+                        resourceName = words[++i];
+                        kernel.systemCalls.writeToScreen(resourceName);
+                        done = true;
+                        break;
+                    case "assign":
+                        String variableName = words[++i];
+                        String value = words[++i];
+                        String data = "";
+                        if (value.equals("input")) {
+                            kernel.systemCalls.writeToScreen("Please enter a value :");
+                            Scanner scan = new Scanner(System.in);
+                            data = scan.nextLine();
+                        }else if(value.equals("readFile")){
+                            resourceName = words[++i];
+                            String[] lines = kernel.systemCalls.readFromDisk(resourceName);
+                            for(String line : lines){
+                                data += line;
+                            }
+                        }
+                        else{
+                            data = value;
+                        }
+                        process.setVariableValue(variableName, data);
+                        done = true;
+                        break;
+                    case "writeFile":
+                        String fileName = words[++i];
+                        String varName = words[++i];
+                        String[] dataValue;
+                        if(varName.equals("input")){
+                            kernel.systemCalls.writeToScreen("Please enter a value :");
+                            Scanner scan = new Scanner(System.in);
+                            resourceName = scan.nextLine();
+                            dataValue = resourceName.split(" ");
+                            kernel.systemCalls.writeToDisk(fileName,dataValue);
+                        }else{
+                            int size = words.length;
+                            String[] lines = new String[size - 2];
+                            int index = 0;
+                            while(i < words.length){
+                                lines[index++] = words[++i];
+                            }
+                            kernel.systemCalls.writeToDisk(fileName, lines);
+                        }
+                        done = true;
+                        break;
+                    case "readFile":
+                        String[] content = kernel.systemCalls.readFromDisk(words[++i]);
+                        for (String line : content) {
+                            kernel.systemCalls.writeToScreen(line);
+                        }
+                        done = true;
+                        break;
+                    case "printFromTo":
+                        double firstNumber = Double.parseDouble(words[++i]);
+                        double secondNumber = Double.parseDouble(words[++i]);
+                        for (double counter = firstNumber; counter <= secondNumber; counter++) {
+                            kernel.systemCalls.writeToScreen(String.valueOf(counter));
+                        }
+                        done = true;
+                        break;
+                    case "semWait":
+                        resourceName = words[++i];
+                        done = kernel.mutex.semWait(resourceName);
+                        break;
+                    case "semSignal":
+                        kernel.mutex.semSignal(words[++i]);
+                        done = true;
+                        break;
+                    default:
+                        //input's error
+                        break;
+                }
+            }
+            //increment PC
+            if(done){
+                process.pcb.incrementPC();
+            }else{
+                //block the process
+                kernel.scheduler.blockProcess(process, resourceName);
+            }
+            return done;
     }
-
 }
+
