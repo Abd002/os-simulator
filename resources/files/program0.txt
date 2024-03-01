@@ -1,0 +1,6 @@
+semWait program_descriptions
+assign x readFile program_descriptions
+semSignal program_descriptions
+semWait output
+print x
+semSignal output

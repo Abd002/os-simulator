@@ -1,0 +1,6 @@
+semWait employees
+assign x readFile employees
+semSignal employees
+semWait output
+print x
+semSignal output

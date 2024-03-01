@@ -1,0 +1,11 @@
+program0
+prints the contents of a file named program_descriptions
+
+program1
+takes 2 numbers from input and prints all numbers in their range
+
+program2
+prints the contents of a file named employess
+
+program3
+takes an input string and write it to a file named the_truth

@@ -26,13 +26,64 @@ public final class Kernel {
 		this.scheduler = new Scheduler(this, 2);
 		this.systemCalls = new SystemCalls(this);
 		this.mutex = new Mutex(this);
-		this.memory = new Memory(this, 8);
+		this.memory = new Memory(this, 100);
 		this.mmu = new MemoryManagementUnit(this);
 		this.interpreter = new Interpreter(this);
 	}
 
 	public void incrementClock() {
 		clock++;
+		
+		printMessage("\nKERNEL :: CLOCK CYCLE " + clock + " #####################");
+		
+		printMessage("\nMEMORY :: CONTENT (" + memory.MAX_SIZE + " WORDS) ----------------------");
+		MemoryWord[] physicalMemory = memory.getMemory();
+		int[] processIds = mmu.getProcessIDs();
+		for (int i = 0; i < memory.MAX_SIZE; i++) {
+			MemoryWord word = physicalMemory[i];
+					
+			printMessage("MEM BLOCK #" + (i+1));
+			printMessage("\tSTATUS: " + (processIds[i] == -1 ? "Unallocated" : "Allocated for process #" + processIds[i]));
+			
+			if (processIds[i] != -1) {
+				printMessage("\tTYPE: " + (word.isInstruction() ? "Instruction" : "Variable"));
+				
+				if (word.isInstruction()) {
+					printMessage("\tINSTRUCTION: " + word.getData());
+				}
+				if (word.isVariable()) {
+					printMessage("\tVARIABLE NAME: " + word.getVariableName());
+					printMessage("\tVARIABLE VALUE: " + word.getData());					
+				}
+			}
+		}
+		
+		printMessage("\nSCHEDULER :: QUEUES -----------------------------");
+		printMessage("READY QUEUE");
+		scheduler.getReadyQueue().forEach(pcb -> printMessage("\tProcess #" + pcb.pid));
+		printMessage("INPUT WAITING QUEUE");	
+		scheduler.getInputWaitingQueue().forEach(pcb -> printMessage("\tProcess #" + pcb.pid));
+		printMessage("OUTPUT WAITING QUEUE");
+		scheduler.getOutputWaitingQueue().forEach(pcb -> printMessage("\tProcess #" + pcb.pid));
+		printMessage("FILE WAITING QUEUE");
+		scheduler.getFileWaitingQueue().forEach((f, q) -> {
+			if (!q.isEmpty()) {
+				printMessage("\tFile Name: " + f);
+				q.forEach(pcb -> printMessage("\t\tProcess #" + pcb.pid));
+			}
+		});
+		
+		printMessage("\nMUTEX :: LOCKS -----------------------------");
+		printMessage("Input Mutex: " + (mutex.isInputMutexFree() ? "AVAILABLE" : "LOCKED"));
+		printMessage("Output Mutex: " + (mutex.isOutputMutexFree() ? "AVAILABLE" : "LOCKED"));
+		String[] lockedFiles = mutex.getMutexLockedFiles();
+		if (lockedFiles.length != 0) {
+			printMessage("Locked Files: ");
+			for (int i = 0; i < lockedFiles.length; i++) {
+				printMessage("\tFile Name: " + lockedFiles[i]);
+			}
+		}
+		
 		Driver.checkProcessArrival(clock);
 		return;
 	}
@@ -47,8 +98,9 @@ public final class Kernel {
 	}
 
 	public void run() {
+		printMessage("START OF SIMULATION #############################################\n");
 		scheduler.schedule();
-		System.out.println("END OFSIMULATION");
+		printMessage("END OF SIMULATION #############################################");
 		return;
 	}
 

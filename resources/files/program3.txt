@@ -1,0 +1,6 @@
+semWait input
+assign x input
+semSignal input
+semWait the_truth
+writeFile the_truth x
+semSignal the_truth

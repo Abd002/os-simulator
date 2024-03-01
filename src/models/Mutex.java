@@ -63,7 +63,7 @@ public final class Mutex {
 		return inputSem == 1;
 	}
 	
-	public boolean inOutputMutexFree() {
+	public boolean isOutputMutexFree() {
 		return outputSem == 1;
 	}
 	

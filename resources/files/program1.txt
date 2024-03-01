@@ -1,0 +1,7 @@
+semWait input
+assign x input
+assign y input
+semSignal input
+semWait output
+printFromTo x y
+semSignal output
