@@ -2,7 +2,9 @@ package models;
 
 import models.process.Process;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.Set;
 
 public final class Interpreter {
     private final Kernel kernel;
@@ -17,7 +19,7 @@ public final class Interpreter {
      * @return all variables name
      */
     public String[] parseVariables(String[] programLines){
-        ArrayList<String> varNames = new ArrayList<>();
+    	Set<String> varNames = new HashSet<String> ();
         for(int index = 0;index < programLines.length;index++){
             String programLine = programLines[index];
             String[] words = programLine.split(" ");
@@ -30,27 +32,17 @@ public final class Interpreter {
                     case "assign":
                         varNames.add(words[++i]);
                         break;
-                    case "writeFile":
-                        varNames.add(words[++i]);
-                        break;
-                    case "readFile":
-                        varNames.add(words[++i]);
-                        break;
                     case "printFromTo":
-                        //no variables
-                        break;
-                    case "semWait":
+                        varNames.add(words[++i]);
                         varNames.add(words[++i]);
                         break;
-                    case "semSignal":
-                        varNames.add(words[++i]);
                     default:
                         break;
                 }
             }
         }
 
-        return varNames.toArray(new String[0]);
+        return varNames.toArray(new String[varNames.size()]);
     }
 
     /**

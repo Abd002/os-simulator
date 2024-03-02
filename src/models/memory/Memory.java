@@ -4,7 +4,7 @@ import models.Kernel;
 public final class Memory {
     public final int MAX_SIZE;
     private final Kernel kernel;
-    private  MemoryWord[] memory;
+    private final MemoryWord[] memory;
     public Memory(Kernel kernel,int maxNumberOfWords){
         this.MAX_SIZE = maxNumberOfWords;
         this.memory = new MemoryWord[maxNumberOfWords];
