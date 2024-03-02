@@ -25,6 +25,8 @@ public final class Driver {
 		processes.get(4).add("program2");
 		processes.get(4).add("program3");
 		
+		checkProcessArrival(0);
+		
 		kernel.run();
 	}
 	

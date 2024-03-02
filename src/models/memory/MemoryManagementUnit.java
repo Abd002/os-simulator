@@ -12,16 +12,16 @@ import java.io.File;
 
 public final class MemoryManagementUnit {
     private final Kernel kernel;
-    private boolean[] isAlLocated;
+    private boolean[] isAllocated;
     private int[] processIDs;
 
     public  MemoryManagementUnit (Kernel kernel){
         this.kernel = kernel;
         int size = this.kernel.memory.MAX_SIZE;
-        isAlLocated = new boolean[size];
+        isAllocated = new boolean[size];
         processIDs = new int[size];
         for(int i = 0;i < size;i++){
-            isAlLocated[i] = false;
+            isAllocated[i] = false;
             processIDs[i] = -1;
         }
 
@@ -30,10 +30,10 @@ public final class MemoryManagementUnit {
     public int[] allocateMemory(int size,int pid){
         int[] result = new int[size];
         int index = 0;
-        for(int i = 0;i < isAlLocated.length;i++){
-            if(!isAlLocated[i]){
+        for(int i = 0;i < isAllocated.length;i++){
+            if(!isAllocated[i]){
                 result[index++] = i;
-                isAlLocated[i] = true;
+                isAllocated[i] = true;
                 processIDs[i] = pid;
             }
             if(size <= index){
@@ -41,6 +41,10 @@ public final class MemoryManagementUnit {
             }
         }
         if(size > index){
+        	for (int i = 0; i < index; i++) {
+        		isAllocated[result[i]] = false;
+        		processIDs[result[i]] = -1;
+        	}
             Arrays.fill(result, -1);
         }
         return result;
@@ -48,7 +52,7 @@ public final class MemoryManagementUnit {
 
     public void deallocateMemory(int [] addresses){
         for (int address : addresses) {
-            isAlLocated[address] = false;
+            isAllocated[address] = false;
             processIDs[address] = -1;
         }
     }

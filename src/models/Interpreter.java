@@ -1,6 +1,5 @@
 package models;
 
-import models.Kernel;
 import models.process.Process;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -50,9 +49,8 @@ public final class Interpreter {
                 }
             }
         }
-        String[] variableNames = new String[varNames.size()];
-        variableNames = varNames.toArray(variableNames);
-        return variableNames;
+
+        return varNames.toArray(new String[0]);
     }
 
     /**
@@ -95,8 +93,9 @@ public final class Interpreter {
                         String data = "";
                         if (value.equals("input")) {
                             kernel.systemCalls.writeToScreen("Please enter a value :");
-                            Scanner scan = new Scanner(System.in);
-                            data = scan.nextLine();
+                            try (Scanner scan = new Scanner(System.in)) {
+								data = scan.nextLine();
+							}
                         }else if(value.equals("readFile")){
                             resourceName = words[++i];
                             String[] lines = kernel.systemCalls.readFromDisk(resourceName);
@@ -116,8 +115,9 @@ public final class Interpreter {
                         String[] dataValue;
                         if(varName.equals("input")){
                             kernel.systemCalls.writeToScreen("Please enter a value :");
-                            Scanner scan = new Scanner(System.in);
-                            resourceName = scan.nextLine();
+                            try (Scanner scan = new Scanner(System.in)) {
+								resourceName = scan.nextLine();
+							}
                             dataValue = resourceName.split(" ");
                             kernel.systemCalls.writeToDisk(fileName,dataValue);
                         }else{

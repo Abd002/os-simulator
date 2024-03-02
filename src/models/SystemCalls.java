@@ -1,7 +1,9 @@
 package models;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,27 +21,26 @@ public final class SystemCalls {
 
 	public String[] readFromDisk(String fileName) { /* just the name without .txt */
 		ArrayList<String> stringList = new ArrayList<>();
-		String filePath = "resources/files/" + fileName;
+		String filePath = "resources/files/" + fileName + ".txt";
 
 		File file = new File(filePath);
-		try { /* handle if file doesn't exist */
-
-			Scanner scanner = new Scanner(file);
-
-			while (scanner.hasNextLine()) {
-				String line = scanner.nextLine();
-				stringList.add(line);
+        
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			
+	        String line;
+	        try {
+				while ((line = br.readLine()) != null)
+					stringList.add(line);
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			scanner.close(); /* free up system resources */
+	        
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found");
+			e.printStackTrace();
 		}
 
-		String[] stringArray = new String[stringList.size()];
-		stringArray = stringList.toArray(stringArray);
-
-		return stringArray;
+		return stringList.toArray(new String[0]);
 	}
 
 	public void writeToDisk(String fileName, String lines[]) {

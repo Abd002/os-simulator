@@ -111,7 +111,7 @@ public final class Kernel {
 		PCB pcb = new PCB(programInstructions.length + PasrsedVariables.length);
 		Process process = new Process(pcb, programInstructions, PasrsedVariables);
 
-		int[] allocatedAddress = mmu.allocateMemory(programInstructions.length, pcb.pid);
+		int[] allocatedAddress = mmu.allocateMemory(programInstructions.length + PasrsedVariables.length, pcb.pid);
 		if (allocatedAddress[0] == -1) {
 			mmu.swapToDisk(process);
 		}
