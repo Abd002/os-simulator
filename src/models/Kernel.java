@@ -34,53 +34,53 @@ public final class Kernel {
 	public void incrementClock() {
 		clock++;
 		
-		printMessage("\nKERNEL :: CLOCK CYCLE " + clock + " #####################");
+		systemCalls.writeToScreen("\nKERNEL :: CLOCK CYCLE " + clock + " #####################");
 		
-		printMessage("\nMEMORY :: CONTENT (" + memory.MAX_SIZE + " WORDS) ----------------------");
+		systemCalls.writeToScreen("\nMEMORY :: CONTENT (" + memory.MAX_SIZE + " WORDS) ----------------------");
 		MemoryWord[] physicalMemory = memory.getMemory();
 		int[] processIds = mmu.getProcessIDs();
 		for (int i = 0; i < memory.MAX_SIZE; i++) {
 			MemoryWord word = physicalMemory[i];
 					
-			printMessage("MEM BLOCK #" + (i+1));
-			printMessage("\tSTATUS: " + (processIds[i] == -1 ? "Unallocated" : "Allocated for process #" + processIds[i]));
+			systemCalls.writeToScreen("MEM BLOCK #" + (i+1));
+			systemCalls.writeToScreen("\tSTATUS: " + (processIds[i] == -1 ? "Unallocated" : "Allocated for process #" + processIds[i]));
 			
 			if (processIds[i] != -1) {
-				printMessage("\tTYPE: " + (word.isInstruction() ? "Instruction" : "Variable"));
+				systemCalls.writeToScreen("\tTYPE: " + (word.isInstruction() ? "Instruction" : "Variable"));
 				
 				if (word.isInstruction()) {
-					printMessage("\tINSTRUCTION: " + word.getData());
+					systemCalls.writeToScreen("\tINSTRUCTION: " + word.getData());
 				}
 				if (word.isVariable()) {
-					printMessage("\tVARIABLE NAME: " + word.getVariableName());
-					printMessage("\tVARIABLE VALUE: " + word.getData());					
+					systemCalls.writeToScreen("\tVARIABLE NAME: " + word.getVariableName());
+					systemCalls.writeToScreen("\tVARIABLE VALUE: " + word.getData());					
 				}
 			}
 		}
 		
-		printMessage("\nSCHEDULER :: QUEUES -----------------------------");
-		printMessage("READY QUEUE");
-		scheduler.getReadyQueue().forEach(pcb -> printMessage("\tProcess #" + pcb.pid));
-		printMessage("INPUT WAITING QUEUE");	
-		scheduler.getInputWaitingQueue().forEach(pcb -> printMessage("\tProcess #" + pcb.pid));
-		printMessage("OUTPUT WAITING QUEUE");
-		scheduler.getOutputWaitingQueue().forEach(pcb -> printMessage("\tProcess #" + pcb.pid));
-		printMessage("FILE WAITING QUEUE");
+		systemCalls.writeToScreen("\nSCHEDULER :: QUEUES -----------------------------");
+		systemCalls.writeToScreen("READY QUEUE");
+		scheduler.getReadyQueue().forEach(pcb -> systemCalls.writeToScreen("\tProcess #" + pcb.pid));
+		systemCalls.writeToScreen("INPUT WAITING QUEUE");	
+		scheduler.getInputWaitingQueue().forEach(pcb -> systemCalls.writeToScreen("\tProcess #" + pcb.pid));
+		systemCalls.writeToScreen("OUTPUT WAITING QUEUE");
+		scheduler.getOutputWaitingQueue().forEach(pcb -> systemCalls.writeToScreen("\tProcess #" + pcb.pid));
+		systemCalls.writeToScreen("FILE WAITING QUEUE");
 		scheduler.getFileWaitingQueue().forEach((f, q) -> {
 			if (!q.isEmpty()) {
-				printMessage("\tFile Name: " + f);
-				q.forEach(pcb -> printMessage("\t\tProcess #" + pcb.pid));
+				systemCalls.writeToScreen("\tFile Name: " + f);
+				q.forEach(pcb -> systemCalls.writeToScreen("\t\tProcess #" + pcb.pid));
 			}
 		});
 		
-		printMessage("\nMUTEX :: LOCKS -----------------------------");
-		printMessage("Input Mutex: " + (mutex.isInputMutexFree() ? "AVAILABLE" : "LOCKED"));
-		printMessage("Output Mutex: " + (mutex.isOutputMutexFree() ? "AVAILABLE" : "LOCKED"));
+		systemCalls.writeToScreen("\nMUTEX :: LOCKS -----------------------------");
+		systemCalls.writeToScreen("Input Mutex: " + (mutex.isInputMutexFree() ? "AVAILABLE" : "LOCKED"));
+		systemCalls.writeToScreen("Output Mutex: " + (mutex.isOutputMutexFree() ? "AVAILABLE" : "LOCKED"));
 		String[] lockedFiles = mutex.getMutexLockedFiles();
 		if (lockedFiles.length != 0) {
-			printMessage("Locked Files: ");
+			systemCalls.writeToScreen("Locked Files: ");
 			for (int i = 0; i < lockedFiles.length; i++) {
-				printMessage("\tFile Name: " + lockedFiles[i]);
+				systemCalls.writeToScreen("\tFile Name: " + lockedFiles[i]);
 			}
 		}
 		
@@ -92,15 +92,10 @@ public final class Kernel {
 		return clock;
 	}
 
-	public void printMessage(String msg) {
-		System.out.println(msg);
-		return;
-	}
-
 	public void run() {
-		printMessage("START OF SIMULATION #############################################\n");
+		systemCalls.writeToScreen("START OF SIMULATION #############################################");
 		scheduler.schedule();
-		printMessage("END OF SIMULATION #############################################");
+		systemCalls.writeToScreen("END OF SIMULATION #############################################");
 		return;
 	}
 
@@ -120,7 +115,7 @@ public final class Kernel {
 			Variable[] variables = process.getAllVariables();
 			for (int i = 0; i < variables.length; i++) {
 				systemCalls.writeToMemory(pcb.getMemoryTable()[variables[i].address],
-						new MemoryWord(variables[i].name, variables[i].getValue()));
+						new MemoryWord(variables[i].getValue(), variables[i].name));
 			}
 			String[] instructions = process.getInstructions();
 			for (int i = 0; i < instructions.length; i++) {
@@ -133,8 +128,8 @@ public final class Kernel {
 	public void saveProcessState(Process process) {
 		Variable[] variableArray = process.getAllVariables();
 		for (int i = 0; i < variableArray.length; i++) {
-			MemoryWord word = new MemoryWord(variableArray[i].name, variableArray[i].getValue());
-			systemCalls.writeToMemory(variableArray[i].address, word);
+			MemoryWord word = new MemoryWord(variableArray[i].getValue(), variableArray[i].name);
+			systemCalls.writeToMemory(process.pcb.getMemoryTable()[variableArray[i].address], word);
 		}
 	}
 

@@ -41,7 +41,7 @@ public final class Scheduler {
 	}
 	
 	private void dispatchProcess(PCB pcb) {
-		kernel.printMessage("SCHEDULER :: Process #" + pcb.pid + " started EXECUTION at CLOCK CYCLE " + kernel.getClock());		
+		kernel.systemCalls.writeToScreen("SCHEDULER :: Process #" + pcb.pid + " started EXECUTION at CLOCK CYCLE " + kernel.getClock());		
 
 		int timeElapsed = 0;	
 		Process process = kernel.restoreProcessState(pcb);
@@ -93,7 +93,7 @@ public final class Scheduler {
 			break;
 		default:
 			if (!fileWaitingQueue.containsKey(resource)) {
-				kernel.printMessage("SCHEDULER :: ERROR :: INVALID RESOURCE NAME, MUST BE INPUT OR OUTPUT OR A NAME OF AN EXISTING FILE");
+				kernel.systemCalls.writeToScreen("SCHEDULER :: ERROR :: INVALID RESOURCE NAME, MUST BE INPUT OR OUTPUT OR A NAME OF AN EXISTING FILE");
 				return;
 			}
 			if (!fileWaitingQueue.get(resource).isEmpty())
@@ -102,13 +102,13 @@ public final class Scheduler {
 	}
 	
 	private void interruptProcess(Process process) {
-		kernel.printMessage("SCHEDULER :: Process #" + process.pcb.pid + " was INTERRUPTED at CLOCK CYCLE " + kernel.getClock());		
+		kernel.systemCalls.writeToScreen("SCHEDULER :: Process #" + process.pcb.pid + " was INTERRUPTED at CLOCK CYCLE " + kernel.getClock());		
 		kernel.saveProcessState(process);
 		admitProcess(process.pcb);
 	}
 	
 	private void terminateProcess(PCB pcb) {
-		kernel.printMessage("SCHEDULER :: Process #" + pcb.pid + "was TERMINATED at CLOCK CYCLE " + kernel.getClock());		
+		kernel.systemCalls.writeToScreen("SCHEDULER :: Process #" + pcb.pid + "was TERMINATED at CLOCK CYCLE " + kernel.getClock());		
 		pcb.setState(ProcessState.TERMINATED);
 		kernel.mmu.deallocateMemory(pcb.getMemoryTable());
 		pcb.deleteProcess();

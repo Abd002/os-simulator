@@ -1,9 +1,7 @@
 package models;
 
 import models.process.Process;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Scanner;
 import java.util.Set;
 
 public final class Interpreter {
@@ -85,14 +83,12 @@ public final class Interpreter {
                         String data = "";
                         if (value.equals("input")) {
                             kernel.systemCalls.writeToScreen("Please enter a value :");
-                            try (Scanner scan = new Scanner(System.in)) {
-								data = scan.nextLine();
-							}
+                            data = kernel.systemCalls.readFromScreen();
                         }else if(value.equals("readFile")){
                             resourceName = words[++i];
                             String[] lines = kernel.systemCalls.readFromDisk(resourceName);
                             for(String line : lines){
-                                data += line;
+                                data += line + "\n";
                             }
                         }
                         else{
@@ -107,9 +103,7 @@ public final class Interpreter {
                         String[] dataValue;
                         if(varName.equals("input")){
                             kernel.systemCalls.writeToScreen("Please enter a value :");
-                            try (Scanner scan = new Scanner(System.in)) {
-								resourceName = scan.nextLine();
-							}
+							resourceName = kernel.systemCalls.readFromScreen();
                             dataValue = resourceName.split(" ");
                             kernel.systemCalls.writeToDisk(fileName,dataValue);
                         }else{
@@ -131,9 +125,9 @@ public final class Interpreter {
                         done = true;
                         break;
                     case "printFromTo":
-                        double firstNumber = Double.parseDouble(words[++i]);
-                        double secondNumber = Double.parseDouble(words[++i]);
-                        for (double counter = firstNumber; counter <= secondNumber; counter++) {
+                        int firstNumber = Integer.parseInt(process.getVariable(words[++i]).getValue());
+                        int secondNumber = Integer.parseInt(process.getVariable(words[++i]).getValue());
+                        for (int counter = firstNumber; counter <= secondNumber; counter++) {
                             kernel.systemCalls.writeToScreen(String.valueOf(counter));
                         }
                         done = true;

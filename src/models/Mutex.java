@@ -50,7 +50,7 @@ public final class Mutex {
 			break;
 		default:
 			if (!fileSem.containsKey(resource)) {
-				kernel.printMessage("MUTEX :: ERROR :: INVALID RESOURCE NAME, MUST BE INPUT, OUTPUT OR A NAME OF AN EXISTING FILE");
+				kernel.systemCalls.writeToScreen("MUTEX :: ERROR :: INVALID RESOURCE NAME, MUST BE INPUT, OUTPUT OR A NAME OF AN EXISTING FILE");
 				return;
 			}
 			fileSem.put(resource, fileSem.get(resource) + 1);
