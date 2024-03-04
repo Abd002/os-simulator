@@ -84,7 +84,7 @@ public final class Kernel {
 
 	public void incrementClock() {
 		clock++;
-		printState();
+		printState(); // COMMENT ME OUT TO ONLY SEE THE PROGRAMS OUTPUT 
 		Driver.checkProcessArrival(clock);
 		return;
 	}
