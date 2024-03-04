@@ -67,6 +67,7 @@ public final class Interpreter {
         boolean done = false;
         String[] instructions = process.getInstructions();
         String instruction = instructions[process.pcb.getPC()];
+        kernel.systemCalls.writeToScreen("INTERPRETER :: Executing instruction <" + instruction + "> from process #" + process.pcb.pid);
         String[] words = instruction.split(" ");
         String resourceName = "";
             for (int i = 0; i < words.length; i++) {
@@ -74,7 +75,7 @@ public final class Interpreter {
                 switch (word) {
                     case "print":
                         resourceName = words[++i];
-                        kernel.systemCalls.writeToScreen(resourceName);
+                        kernel.systemCalls.writeToScreen(process.getVariable(resourceName).getValue());
                         done = true;
                         break;
                     case "assign":
@@ -107,12 +108,7 @@ public final class Interpreter {
                             dataValue = resourceName.split(" ");
                             kernel.systemCalls.writeToDisk(fileName,dataValue);
                         }else{
-                            int size = words.length;
-                            String[] lines = new String[size - 2];
-                            int index = 0;
-                            while(i < words.length){
-                                lines[index++] = words[++i];
-                            }
+                            String[] lines = process.getVariable(varName).getValue().split("\n");
                             kernel.systemCalls.writeToDisk(fileName, lines);
                         }
                         done = true;

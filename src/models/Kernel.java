@@ -26,14 +26,12 @@ public final class Kernel {
 		this.scheduler = new Scheduler(this, 2);
 		this.systemCalls = new SystemCalls(this);
 		this.mutex = new Mutex(this);
-		this.memory = new Memory(this, 100);
+		this.memory = new Memory(100);
 		this.mmu = new MemoryManagementUnit(this);
 		this.interpreter = new Interpreter(this);
 	}
-
-	public void incrementClock() {
-		clock++;
-		
+	
+	private void printState() {
 		systemCalls.writeToScreen("\nKERNEL :: CLOCK CYCLE " + clock + " #####################");
 		
 		systemCalls.writeToScreen("\nMEMORY :: CONTENT (" + memory.MAX_SIZE + " WORDS) ----------------------");
@@ -41,11 +39,10 @@ public final class Kernel {
 		int[] processIds = mmu.getProcessIDs();
 		for (int i = 0; i < memory.MAX_SIZE; i++) {
 			MemoryWord word = physicalMemory[i];
-					
-			systemCalls.writeToScreen("MEM BLOCK #" + (i+1));
-			systemCalls.writeToScreen("\tSTATUS: " + (processIds[i] == -1 ? "Unallocated" : "Allocated for process #" + processIds[i]));
-			
+								
 			if (processIds[i] != -1) {
+				systemCalls.writeToScreen("MEM BLOCK #" + (i+1));
+				systemCalls.writeToScreen("\tSTATUS: Allocated for process #" + processIds[i]);
 				systemCalls.writeToScreen("\tTYPE: " + (word.isInstruction() ? "Instruction" : "Variable"));
 				
 				if (word.isInstruction()) {
@@ -83,11 +80,15 @@ public final class Kernel {
 				systemCalls.writeToScreen("\tFile Name: " + lockedFiles[i]);
 			}
 		}
-		
+	}
+
+	public void incrementClock() {
+		clock++;
+		printState();
 		Driver.checkProcessArrival(clock);
 		return;
 	}
-
+	
 	public int getClock() {
 		return clock;
 	}
@@ -96,6 +97,7 @@ public final class Kernel {
 		systemCalls.writeToScreen("START OF SIMULATION #############################################");
 		scheduler.schedule();
 		systemCalls.writeToScreen("END OF SIMULATION #############################################");
+		systemCalls.scanner.close();
 		return;
 	}
 

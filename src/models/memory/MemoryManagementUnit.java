@@ -1,14 +1,11 @@
 package models.memory;
+
 import models.Kernel;
 import models.process.Process;
 import models.process.PCB;
-import models.SystemCalls;
 import models.process.Variable;
 
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.*;
-import java.io.File;
 
 public final class MemoryManagementUnit {
     private final Kernel kernel;
@@ -116,7 +113,7 @@ public final class MemoryManagementUnit {
         String[] programLines = kernel.systemCalls.readFromDisk(processNameID);
         int sizeNeeded = pcb.getMemoryTable().length;
         int[] addresses = allocateMemory(sizeNeeded,pcb.pid);
-        int[] memoryTable = pcb.getMemoryTable();
+        //int[] memoryTable = pcb.getMemoryTable(); // COMMENTED BECAUSE VAR IS NOT USED
         //check if addresses -1
         if(addresses[0] == -1){
             //we need to free memory.
@@ -188,7 +185,7 @@ public final class MemoryManagementUnit {
         ArrayList<String> varNamesList = new ArrayList<>();
         ArrayList<String> valuesList = new ArrayList<>();
         //copy from disk
-        int index = 0;
+        //int index = 0; // COMMENTED BECAUSE VAR IS NOT USED
         for(int i = 0;i < programLines.length;i++){
             if(programLines[i] == "Instructions"){
                 while(programLines[i+1] != "Variables"){

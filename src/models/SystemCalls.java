@@ -14,9 +14,11 @@ import models.memory.MemoryWord;
 public final class SystemCalls {
 
 	private final Kernel kernel;
-
+	public final Scanner scanner;
+	
 	public SystemCalls(Kernel kernel) {
 		this.kernel = kernel;
+		scanner = new Scanner(System.in);
 	}
 
 	public String[] readFromDisk(String fileName) { /* just the name without .txt */
@@ -44,7 +46,7 @@ public final class SystemCalls {
 	}
 
 	public void writeToDisk(String fileName, String lines[]) {
-		String filePath = "resources/files/" + fileName;
+		String filePath = "resources/files/" + fileName + ".txt";
 		try {
 			FileWriter writer = new FileWriter(filePath);
 			for (int i = 0; i < lines.length; i++) {
@@ -59,9 +61,7 @@ public final class SystemCalls {
 	}
 
 	public String readFromScreen() {
-		Scanner scanner = new Scanner(System.in);
 		String userInput = scanner.nextLine();
-		scanner.close(); /* free up system resources */
 		return userInput;
 	}
 
